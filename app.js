@@ -19,6 +19,27 @@ const app = express();
 // ℹ️ This function is getting exported from the config folder. It runs most middlewares
 require('./config')(app);
 
+
+// require session
+const session = require('express-session');
+
+// ADDED: require mongostore
+const MongoStore = require('connect-mongo');
+
+app.use(
+  session({
+    secret: 'doesnt matter',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { maxAge: 600000 }, // 10 minutes
+    store: MongoStore.create({
+      // <== ADDED !!!
+      mongoUrl: "mongodb://localhost/lab-express-basic-auth"
+     
+    })
+  })
+);
+
 // default value for title local
 const projectName = 'lab-express-basic-auth';
 const capitalized = string => string[0].toUpperCase() + string.slice(1).toLowerCase();
